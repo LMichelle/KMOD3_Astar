@@ -1,11 +1,10 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using Solution;
 public class Agent : MonoBehaviour
 {
     public int moveButton = 0;
     public float moveSpeed = 3;
-    private AstarSolution Astar = new AstarSolution();
+    public Astar Astar; // = new Astar();
     private List<Vector2Int> path = new List<Vector2Int>();
     private Plane ground = new Plane(Vector3.up, 0f);
     private MeshRenderer renderer;
@@ -52,7 +51,7 @@ public class Agent : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(moveButton))
         {
-            Debug.Log("Click");
+            //Debug.Log("Click");
             Ray r = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -10));
 
             Vector3 mousePos = MouseToWorld();
