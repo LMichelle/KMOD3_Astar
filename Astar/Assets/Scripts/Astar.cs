@@ -39,7 +39,6 @@ public class Astar : MonoBehaviour
         OpenList.Add(startNode);
 
         while (OpenList.Count > 0) {
-            Debug.Log("in the while loop");
             Node currentNode = OpenList[0];
             for (int i = 1; i < OpenList.Count; i++) { // check all the nodes in openlist that are not the current
                 if (OpenList[i].FCost < currentNode.FCost || OpenList[i].FCost == currentNode.FCost && OpenList[i].HCost < currentNode.HCost) {
@@ -61,6 +60,8 @@ public class Astar : MonoBehaviour
                     continue;
                 }
                 int moveCost = currentNode.GCost + GetManhattenDistance(currentNode, neigbourNode);
+                // check for walls between this node and the neighbournode. 
+                // if there, add large cost to movecost (will be the gcost)
 
                 if (moveCost < neigbourNode.GCost || !OpenList.Contains(neigbourNode)) {
                     neigbourNode.GCost = moveCost;
@@ -78,16 +79,16 @@ public class Astar : MonoBehaviour
 
     public List<Node> GetNeighbouringNodes(Node n)
     {
-        Debug.Log("Searching neighbouring nodes");
         Debug.Log(n.position);
         List<Node> NeighbouringNodesList = new List<Node>();
 
+        // non-diagonally
         for (int xx = -1; xx <= 1; xx++) {
-            for (int yy = -1; yy <= -1; yy++) {
+            for (int yy = -1; yy <= 1; yy++) {
                 int x = n.position.x + xx;
                 int y = n.position.y + yy;
                 if (x < 0 || x >= nodeGrid.GetLength(0) || y < 0 || y >= nodeGrid.GetLength(1)) { continue; }
-                if (Mathf.Abs(x) == Mathf.Abs(y)) { continue; }
+                if (Mathf.Abs(xx) == Mathf.Abs(yy)) { continue; }
                 NeighbouringNodesList.Add(nodeGrid[x, y]);
             }
         }
@@ -100,11 +101,15 @@ public class Astar : MonoBehaviour
         int ix = Mathf.Abs(startNode.position.x - endNode.position.x);
         int iy = Mathf.Abs(startNode.position.y - endNode.position.y);
 
-        if (ix > iy) {
-            return 14 * iy + 10 * (ix - iy);
-        }
+        // this only works for diagonal pathfinding. We want the ix/iy + our heuristic cost:
+        // if or neighbournode has a wall on our side, add an insane cost too it. It's not traversible.
+        // the (ix - iy) is the diagonal part in this. The 14 for the axis that will go diagonally.
+        //if (ix > iy) {
+        //    return 14 * iy + 10 * (ix - iy); 
+        //}
+        //return 14 * ix + 10 * (iy - ix);
 
-        return 14 * ix + 10 * (iy - ix);
+        return  iy + ix; // times 10 for easier reading of the value
     }
 
     public List<Vector2Int> GetFinalPath(Node startNode, Node endNode)
