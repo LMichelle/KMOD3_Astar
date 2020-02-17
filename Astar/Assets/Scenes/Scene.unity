@@ -499,7 +499,7 @@ GameObject:
   - component: {fileID: 1077131876}
   - component: {fileID: 1077131871}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: Agent 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -517,7 +517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11f5944241d57a046898bad47b41c957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveButton: 1
+  moveButton: 0
   moveSpeed: 3
   Astar: {fileID: 283745892}
 --- !u!65 &1077131872
@@ -782,7 +782,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1670212673}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 089e5e6f6d2575d46973ce30b7332220, type: 3}
   m_Name: 

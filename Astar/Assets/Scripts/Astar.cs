@@ -136,10 +136,6 @@ public class Astar : MonoBehaviour
             Debug.LogError("neighbourcell doesn't align.");
         }
 
-        //if ((startCell.HasWall(Wall.LEFT) && neighbourCell.HasWall(Wall.RIGHT)) ||
-        //    (startCell.HasWall(Wall.RIGHT) && neighbourCell.HasWall(Wall.LEFT)) ||
-        //    (startCell.HasWall(Wall.UP) && neighbourCell.HasWall(Wall.DOWN)) ||
-        //    (startCell.HasWall(Wall.DOWN) && neighbourCell.HasWall(Wall.UP))) { return 10000; }
         return 0;
     }
 
