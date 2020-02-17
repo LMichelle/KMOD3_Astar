@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-/// <summary> Notes
-/// Don't forget to remove gizmos and monobehaviour functionality from astar class
-/// Why can't I return a value only in the while loop?
-/// </summary>
-
-
-public class Astar : MonoBehaviour
+public class Astar
 {
     public Node[,] nodeGrid;
     List<Vector2Int> finalPath;
@@ -55,7 +49,6 @@ public class Astar : MonoBehaviour
 
             // Get the neighbours
             foreach (Node neigbourNode in GetNeighbouringNodes(currentNode)) {
-                Debug.Log(GetNeighbouringNodes(currentNode).Count);
                 if (ClosedList.Contains(neigbourNode)) { //!neigbourNode.walkable || 
                     continue;
                 }
@@ -80,7 +73,6 @@ public class Astar : MonoBehaviour
 
     public List<Node> GetNeighbouringNodes(Node n)
     {
-        Debug.Log(n.position);
         List<Node> NeighbouringNodesList = new List<Node>();
 
         // non-diagonally
@@ -166,24 +158,6 @@ public class Astar : MonoBehaviour
                 nodeGrid[x, y] = new Node(grid[x, y].gridPosition, null, 0, 0);
             }
         }
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (nodeGrid != null) {
-            foreach(Node n in nodeGrid) {
-                Gizmos.color = Color.white;
-                Gizmos.DrawCube(new Vector3(n.position.x, 0, n.position.y), Vector3.one * .6f);
-            }
-        }
-
-        if (finalPath != null) {
-            foreach (Vector2Int pos in finalPath) {
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawCube(new Vector3(pos.x, 0, pos.y), Vector3.one * .5f);
-            }
-        }
-        
     }
 
     /// <summary>
