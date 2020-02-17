@@ -62,6 +62,7 @@ public class Astar : MonoBehaviour
                 int moveCost = currentNode.GCost + GetManhattenDistance(currentNode, neigbourNode);
                 // check for walls between this node and the neighbournode. 
                 // if there, add large cost to movecost (will be the gcost)
+                moveCost += GetWallCost(currentNode, neigbourNode, grid);
 
                 if (moveCost < neigbourNode.GCost || !OpenList.Contains(neigbourNode)) {
                     neigbourNode.GCost = moveCost;
@@ -101,15 +102,45 @@ public class Astar : MonoBehaviour
         int ix = Mathf.Abs(startNode.position.x - endNode.position.x);
         int iy = Mathf.Abs(startNode.position.y - endNode.position.y);
 
-        // this only works for diagonal pathfinding. We want the ix/iy + our heuristic cost:
-        // if or neighbournode has a wall on our side, add an insane cost too it. It's not traversible.
-        // the (ix - iy) is the diagonal part in this. The 14 for the axis that will go diagonally.
-        //if (ix > iy) {
-        //    return 14 * iy + 10 * (ix - iy); 
-        //}
-        //return 14 * ix + 10 * (iy - ix);
+        return iy + ix;
+    }
 
-        return  iy + ix; // times 10 for easier reading of the value
+    public int GetWallCost(Node startNode, Node neighbourNode, Cell[,] grid)
+    {
+        Cell startCell = grid[startNode.position.x, startNode.position.y];
+        Cell neighbourCell = grid[neighbourNode.position.x, neighbourNode.position.y];
+
+        // if start has wall on left and neighbour on right 
+        // start right neighbour left
+        // start up neighbour down
+        // start down neighbour up
+        // --> then return high value - infinity?
+
+        if (neighbourCell.gridPosition.x < startCell.gridPosition.x ) {
+            if (startCell.HasWall(Wall.LEFT) && neighbourCell.HasWall(Wall.RIGHT)) {
+                return 10000;
+            }
+        } else if (neighbourCell.gridPosition.x > startCell.gridPosition.x) {
+            if (startCell.HasWall(Wall.RIGHT) && neighbourCell.HasWall(Wall.LEFT)) {
+                return 10000;
+            }
+        } else if (neighbourCell.gridPosition.y < startCell.gridPosition.y) {
+            if (startCell.HasWall(Wall.DOWN) && neighbourCell.HasWall(Wall.UP)) {
+                return 10000;
+            }
+        } else if (neighbourCell.gridPosition.y > startCell.gridPosition.y) {
+            if (startCell.HasWall(Wall.UP) && neighbourCell.HasWall(Wall.DOWN)) {
+                return 10000;
+            }
+        } else {
+            Debug.LogError("neighbourcell doesn't align.");
+        }
+
+        //if ((startCell.HasWall(Wall.LEFT) && neighbourCell.HasWall(Wall.RIGHT)) ||
+        //    (startCell.HasWall(Wall.RIGHT) && neighbourCell.HasWall(Wall.LEFT)) ||
+        //    (startCell.HasWall(Wall.UP) && neighbourCell.HasWall(Wall.DOWN)) ||
+        //    (startCell.HasWall(Wall.DOWN) && neighbourCell.HasWall(Wall.UP))) { return 10000; }
+        return 0;
     }
 
     public List<Vector2Int> GetFinalPath(Node startNode, Node endNode)
@@ -151,8 +182,6 @@ public class Astar : MonoBehaviour
         }
 
         if (finalPath != null) {
-            Debug.Log("Finalpath not null");
-
             foreach (Vector2Int pos in finalPath) {
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawCube(new Vector3(pos.x, 0, pos.y), Vector3.one * .5f);
